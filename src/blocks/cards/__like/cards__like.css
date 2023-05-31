@@ -1,0 +1,8 @@
+.cards__like {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+  justify-content: flex-end;
+  height: 40px;
+}

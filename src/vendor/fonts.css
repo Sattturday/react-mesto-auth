@@ -1,0 +1,50 @@
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../vendor/fonts/inter_regular.eot'),
+    /* IE 9 Compatibility Mode */
+    url('../vendor/fonts/inter_regular.eot?#iefix') format('embedded-opentype'),
+    /* IE < 9 */
+    url('../vendor/fonts/inter_regular.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../vendor/fonts/inter_regular.woff') format('woff'),
+    /* Firefox >= 3.6, any other modern browser */
+    url('../vendor/fonts/inter_regular.ttf') format('truetype');
+  /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../vendor/fonts/inter_medium.eot'),
+    /* IE 9 Compatibility Mode */
+    url('../vendor/fonts/inter_medium.eot?#iefix') format('embedded-opentype'),
+    /* IE < 9 */
+    url('../vendor/fonts/inter_medium.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../vendor/fonts/inter_medium.woff') format('woff'),
+    /* Firefox >= 3.6, any other modern browser */
+    url('../vendor/fonts/inter_medium.ttf') format('truetype');
+  /* Safari, Android, iOS */
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('../vendor/fonts/inter_black.eot'),
+    /* IE 9 Compatibility Mode */
+    url('../vendor/fonts/inter_black.eot?#iefix') format('embedded-opentype'),
+    /* IE < 9 */
+    url('../vendor/fonts/inter_black.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../vendor/fonts/inter_black.woff') format('woff'),
+    /* Firefox >= 3.6, any other modern browser */
+    url('../vendor/fonts/inter_black.ttf') format('truetype');
+  /* Safari, Android, iOS */
+}

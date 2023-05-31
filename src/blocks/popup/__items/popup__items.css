@@ -1,0 +1,11 @@
+.popup__items {
+  margin: 0;
+  padding: 33px 0 0;
+  border: none;
+}
+
+@media screen and (max-width: 768px) {
+  .popup__items {
+    padding: 45px 0 0;
+  }
+}
