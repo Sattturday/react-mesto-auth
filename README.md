@@ -1,7 +1,46 @@
-# Здесь будет ваш проект на Реакте с авторизацией и регистрацией
+# Проект: Место (версия на React с авторизацией и регистрацией)
 
-Используйте ваши предыдущие наработки по проекту Mesto. Это может быть работа 11-го спринта или его улучшенная версия после 2-х последних спринтов. 
+### Обзор
 
-Все запросы на авторизацию, регистрацию и проверку токена должны работать через сервис `https://auth.nomoreparties.co`. Остальные запросы, не относящиеся к этой проектной работе могут быть к бэкенду из предыдущих спринтов.
+- Info
+- GitHub Pages
+- Примененные знания
+- Figma
+- Планы на будущее
 
-Успехов!
+### **Info**
+
+Это сервис Mesto: интерактивная страница, куда можно добавлять фотографии, удалять их и ставить лайки.
+Работа выполнена в рамках серии проeктных работ на курсе Web-разработчик (Яндекс Практикум).
+
+1. [Mesto (версия на чистом JavaScript)](https://github.com/Sattturday/mesto)
+2. [Mesto (версия на React)](https://github.com/Sattturday/mesto-react)
+3. Mesto (версия на React с авторизацией и регистрацией) ⬅ этот репозиторий
+
+### **GitHub Pages**
+
+- Открыть в браузере сайт [Mesto](https://sattturday.github.io/mesto-react-auth/)
+
+### Примененные знания
+
+- React
+  - использование Create React App
+  - хуки useState и useEffect
+  - React Router
+  - защищенные маршруты
+  - авторизация через JWT
+  - работа с Local Starage
+
+### **Figma**
+
+Проект выполнен по дизайн-макету в Figma.
+
+- [Ссылка на макет в Figma - 1 часть](https://www.figma.com/file/2cn9N9jSkmxD84oJik7xL7/JavaScript.-Sprint-4?node-id=0%3A1)
+- [Ссылка на макет в Figma - 2 часть](https://www.figma.com/file/bjyvbKKJN2naO0ucURl2Z0/JavaScript.-Sprint-5?node-id=0%3A1)
+- [Ссылка на макет в Figma - 3 часть](https://www.figma.com/file/kRVLKwYG3d1HGLvh7JFWRT/JavaScript.-Sprint-6?node-id=0%3A1)
+- [Ссылка на макет в Figma - 4 часть](https://www.figma.com/file/PSdQFRHoxXJFs2FH8IXViF/JavaScript-9-sprint?node-id=0%3A1)
+- [Ссылка на макет в Figma - 5 часть](https://www.figma.com/file/5H3gsn5lIGPwzBPby9jAOo/Sprint-14-RU?node-id=0%3A1)
+
+### **Планы на будущее**
+
+Продолжить разработку проекта.
