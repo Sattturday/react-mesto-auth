@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import api from '../utils/api';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import Footer from './Footer';
+import api from '../utils/api';
 import Header from './Header';
 import Main from './Main';
 import ImagePopup from './ImagePopup';
@@ -9,6 +9,11 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import ConfirmationPopup from './ConfirmationPopup';
+import Login from './Login';
+import Register from './Register';
+import ProtectedRoute from './ProtectedRoute';
+import InfoTooltip from './InfoToolTip';
+import { checkToken } from '../utils/auth';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,12 +28,23 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
 
+  // авторизация
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState('asdf');
+  const [loginPopupMessage, setLoginPopupMessage] = useState(null);
+
+  const navigate = useNavigate();
+
   const isOpen =
     isEditAvatarPopupOpen ||
     isEditProfilePopupOpen ||
     isAddPlacePopupOpen ||
     selectedCard ||
     deletedCard;
+
+  useEffect(() => {
+    tokenCheck();
+  }, []);
 
   useEffect(() => {
     api
@@ -72,6 +88,10 @@ function App() {
 
   function handleCardDelete(card) {
     setDeletedCard(card);
+  }
+
+  function handleLoginPopupMessage(message) {
+    setLoginPopupMessage(message);
   }
 
   function handleUpdateAvatar(data) {
@@ -135,19 +155,74 @@ function App() {
     setDeletedCard(null);
   }
 
+  // авторизация
+  function handleLogin(email) {
+    setLoggedIn(true);
+    setUserEmail(email);
+  }
+
+  function handleRegister() {}
+
+  function handleLogout() {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+  }
+
+  function tokenCheck() {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      checkToken(token)
+        .then((data) => {
+          handleLogin(data.data.email);
+          navigate('/react-mesto-auth');
+        })
+        .catch(console.error);
+    }
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header />
-      <Main
-        onEditProfile={handleEditProfileClick}
-        onAddPlace={handleAddPlaceClick}
-        onEditAvatar={handleEditAvatarClick}
-        cards={cards}
-        onCardClick={handleCardClick}
-        onCardLike={handleCardLike}
-        onCardDelete={handleCardDelete}
+      <Header
+        userEmail={userEmail}
+        link='/sign-in'
+        linkText='Выйти'
+        onLogout={handleLogout}
       />
-      <Footer />
+
+      <Routes>
+        <Route
+          path='/'
+          element={
+            loggedIn ? (
+              <Navigate to='/react-mesto-auth' />
+            ) : (
+              <Navigate to='/sign-in' replace />
+            )
+          }
+        />
+        <Route
+          path='/react-mesto-auth'
+          element={
+            <ProtectedRoute
+              loggedIn={loggedIn}
+              element={Main}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              cards={cards}
+              onCardClick={handleCardClick}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+            />
+          }
+        />
+        <Route
+          path='/sign-up'
+          element={<Register onSubmit={handleRegister} />}
+        />
+        <Route path='/sign-in' element={<Login handleLogin={handleLogin} />} />
+      </Routes>
 
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
@@ -178,6 +253,8 @@ function App() {
       />
 
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+
+      {/* <InfoTooltip message={loginPopupMessage} onClose={closeAllPopups} /> */}
     </CurrentUserContext.Provider>
   );
 }

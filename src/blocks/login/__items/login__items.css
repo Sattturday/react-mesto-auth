@@ -1,0 +1,11 @@
+.login__items {
+  margin: 0;
+  padding: 18px 0 0;
+  border: none;
+}
+
+@media screen and (max-width: 768px) {
+  .login__items {
+    padding: 45px 0 0;
+  }
+}
