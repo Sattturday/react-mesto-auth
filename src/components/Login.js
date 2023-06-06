@@ -1,32 +1,16 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useForm } from '../hooks/useForm';
 import { useValidation } from '../hooks/useValidation';
-import { login } from '../utils/auth';
 
 function Login({ handleLogin }) {
   const { isValid, setIsValid, errors, setErrors, validateForm } =
     useValidation();
   const { values, handleChange, setValues } = useForm(validateForm, {});
-  const [errorMessage, setErrorMessage] = useState('');
-
-  const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    login(values)
-      .then((data) => {
-        if (data.token) {
-          localStorage.setItem('token', data.token);
-          handleLogin(data.email);
-          navigate('/react-mesto-auth');
-          return data;
-        } else {
-          return;
-        }
-      })
-      .catch((err) => setErrorMessage(err));
+    handleLogin(values);
   }
 
   useEffect(() => {
@@ -44,7 +28,6 @@ function Login({ handleLogin }) {
         noValidate
       >
         <p className='login__title'>Вход</p>
-        <span className='login__error'>{errorMessage}</span>
         <fieldset className='login__items'>
           <input
             className='login__input'
@@ -60,7 +43,7 @@ function Login({ handleLogin }) {
             className='login__input'
             name='password'
             type='password'
-            minLength='8'
+            minLength='6'
             placeholder='Пароль'
             value={values.password || ''}
             onChange={handleChange}
@@ -72,6 +55,7 @@ function Login({ handleLogin }) {
               (!isValid && ' login__button_disabled') || ''
             }`}
             type='submit'
+            disabled={!isValid}
           >
             Войти
           </button>

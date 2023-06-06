@@ -1,25 +1,17 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useForm } from '../hooks/useForm';
 import { useValidation } from '../hooks/useValidation';
-import { register } from '../utils/auth';
 
-function Register(onSubmit) {
+function Register({ handleRegister }) {
   const { isValid, setIsValid, errors, setErrors, validateForm } =
     useValidation();
   const { values, handleChange, setValues } = useForm(validateForm, {});
-  const [errorMessage, setErrorMessage] = useState('');
-
-  const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    register(values)
-      .then(() => {
-        navigate('/sign-in');
-      })
-      .catch((err) => setErrorMessage(err));
+    handleRegister(values);
   }
 
   useEffect(() => {
@@ -37,7 +29,6 @@ function Register(onSubmit) {
         noValidate
       >
         <p className='login__title'>Регистрация</p>
-        <span className='login__error'>{errorMessage}</span>
         <fieldset className='login__items'>
           <input
             className='login__input'
@@ -53,7 +44,7 @@ function Register(onSubmit) {
             className='login__input'
             name='password'
             type='password'
-            minLength='8'
+            minLength='6'
             placeholder='Пароль'
             value={values.password || ''}
             onChange={handleChange}
@@ -65,6 +56,7 @@ function Register(onSubmit) {
               (!isValid && ' login__button_disabled') || ''
             }`}
             type='submit'
+            disabled={!isValid}
           >
             Зарегистрироваться
           </button>

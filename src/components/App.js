@@ -13,7 +13,7 @@ import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoToolTip';
-import { checkToken } from '../utils/auth';
+import { login, register, checkToken } from '../utils/auth';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,27 +24,24 @@ function App() {
 
   const [selectedCard, setSelectedCard] = useState(null);
   const [deletedCard, setDeletedCard] = useState(null);
+  const [infoMessage, setInfoMessage] = useState(null);
 
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
 
   // авторизация
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState('asdf');
-  const [loginPopupMessage, setLoginPopupMessage] = useState(null);
-
-  const navigate = useNavigate();
+  const [userEmail, setUserEmail] = useState('');
 
   const isOpen =
     isEditAvatarPopupOpen ||
     isEditProfilePopupOpen ||
     isAddPlacePopupOpen ||
     selectedCard ||
-    deletedCard;
+    deletedCard ||
+    infoMessage;
 
-  useEffect(() => {
-    tokenCheck();
-  }, []);
+  const navigate = useNavigate();
 
   useEffect(() => {
     api
@@ -59,6 +56,10 @@ function App() {
   }, []);
 
   useEffect(() => {
+    tokenCheck();
+  }, [navigate]);
+
+  useEffect(() => {
     const closeByEscape = (evt) => {
       if (evt.key === 'Escape') {
         closeAllPopups();
@@ -70,6 +71,7 @@ function App() {
     }
   }, [isOpen]);
 
+  // открытие/закрытие попапов
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -82,6 +84,15 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
+  function closeAllPopups() {
+    setIsEditAvatarPopupOpen(false);
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlacePopupOpen(false);
+    setSelectedCard(null);
+    setDeletedCard(null);
+    setInfoMessage(null);
+  }
+
   function handleCardClick(card) {
     setSelectedCard(card);
   }
@@ -90,8 +101,8 @@ function App() {
     setDeletedCard(card);
   }
 
-  function handleLoginPopupMessage(message) {
-    setLoginPopupMessage(message);
+  function handleInfoMessage(message) {
+    setInfoMessage(message);
   }
 
   function handleUpdateAvatar(data) {
@@ -147,25 +158,45 @@ function App() {
       .finally(() => setIsLoading(false));
   }
 
-  function closeAllPopups() {
-    setIsEditAvatarPopupOpen(false);
-    setIsEditProfilePopupOpen(false);
-    setIsAddPlacePopupOpen(false);
-    setSelectedCard(null);
-    setDeletedCard(null);
-  }
-
   // авторизация
-  function handleLogin(email) {
-    setLoggedIn(true);
-    setUserEmail(email);
+  function handleRegister(values) {
+    register(values)
+      .then(() => {
+        navigate('/sign-in');
+        setInfoMessage({
+          text: 'Вы успешно зарегистрировались!',
+          isSuccess: true,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        setInfoMessage({
+          text: 'Что-то пошло не так! Попробуйте ещё раз.',
+          isSuccess: false,
+        });
+      });
   }
 
-  function handleRegister() {}
-
-  function handleLogout() {
-    localStorage.removeItem('token');
-    setLoggedIn(false);
+  function handleLogin(values) {
+    login(values)
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          setUserEmail(values.email);
+          setLoggedIn(true);
+          navigate('/react-mesto-auth');
+          return data;
+        } else {
+          return;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setInfoMessage({
+          text: 'Что-то пошло не так! Попробуйте ещё раз.',
+          isSuccess: false,
+        });
+      });
   }
 
   function tokenCheck() {
@@ -174,21 +205,23 @@ function App() {
     if (token) {
       checkToken(token)
         .then((data) => {
-          handleLogin(data.data.email);
+          setUserEmail(data.data.email);
+          setLoggedIn(true);
           navigate('/react-mesto-auth');
         })
         .catch(console.error);
     }
   }
 
+  function handleLogout() {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    setUserEmail('');
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header
-        userEmail={userEmail}
-        link='/sign-in'
-        linkText='Выйти'
-        onLogout={handleLogout}
-      />
+      <Header userEmail={userEmail} onLogout={handleLogout} />
 
       <Routes>
         <Route
@@ -219,9 +252,17 @@ function App() {
         />
         <Route
           path='/sign-up'
-          element={<Register onSubmit={handleRegister} />}
+          element={<Register handleRegister={handleRegister} />}
         />
-        <Route path='/sign-in' element={<Login handleLogin={handleLogin} />} />
+        <Route
+          path='/sign-in'
+          element={
+            <Login
+              handleLogin={handleLogin}
+              handleInfoMessage={handleInfoMessage}
+            />
+          }
+        />
       </Routes>
 
       <EditProfilePopup
@@ -254,7 +295,7 @@ function App() {
 
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
-      {/* <InfoTooltip message={loginPopupMessage} onClose={closeAllPopups} /> */}
+      <InfoTooltip message={infoMessage} onClose={closeAllPopups} />
     </CurrentUserContext.Provider>
   );
 }

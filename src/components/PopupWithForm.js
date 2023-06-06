@@ -31,6 +31,7 @@ function PopupWithForm({
               (!isValid && ' popup__button_disabled') || ''
             }`}
             type='submit'
+            disabled={!isValid}
           >
             {isLoading ? loadingText : buttonText}
           </button>
