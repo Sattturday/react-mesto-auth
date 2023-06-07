@@ -1,19 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { login, register, checkToken } from '../utils/auth';
 import api from '../utils/api';
-import Header from './Header';
-import Main from './Main';
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import ConfirmationPopup from './ConfirmationPopup';
-import Login from './Login';
-import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoToolTip';
-import { login, register, checkToken } from '../utils/auth';
+import Loading from './Loading';
+import Layout from './Layout';
+
+const Main = lazy(() => import('./Main'));
+const Login = lazy(() => import('./Login'));
+const Register = lazy(() => import('./Register'));
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +31,6 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
 
-  // авторизация
   const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
 
@@ -221,49 +222,56 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header userEmail={userEmail} onLogout={handleLogout} />
-
-      <Routes>
-        <Route
-          path='/'
-          element={
-            loggedIn ? (
-              <Navigate to='/react-mesto-auth' />
-            ) : (
-              <Navigate to='/sign-in' replace />
-            )
-          }
-        />
-        <Route
-          path='/react-mesto-auth'
-          element={
-            <ProtectedRoute
-              loggedIn={loggedIn}
-              element={Main}
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onEditAvatar={handleEditAvatarClick}
-              cards={cards}
-              onCardClick={handleCardClick}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          <Route
+            path='/'
+            element={<Layout userEmail={userEmail} onLogout={handleLogout} />}
+          >
+            <Route
+              index
+              element={
+                loggedIn ? (
+                  <Navigate to='/react-mesto-auth' />
+                ) : (
+                  <Navigate to='/sign-in' replace />
+                )
+              }
             />
-          }
-        />
-        <Route
-          path='/sign-up'
-          element={<Register handleRegister={handleRegister} />}
-        />
-        <Route
-          path='/sign-in'
-          element={
-            <Login
-              handleLogin={handleLogin}
-              handleInfoMessage={handleInfoMessage}
+            <Route
+              path='react-mesto-auth'
+              element={
+                <ProtectedRoute
+                  element={Main}
+                  loggedIn={loggedIn}
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                />
+              }
             />
-          }
-        />
-      </Routes>
+            <Route
+              path='sign-up'
+              element={<Register handleRegister={handleRegister} />}
+            />
+            <Route
+              path='sign-in'
+              element={
+                <Login
+                  handleLogin={handleLogin}
+                  handleInfoMessage={handleInfoMessage}
+                />
+              }
+            />
+            <Route path='load' element={<Loading />} />
+            {/* <Route path='*' element={<NotFoundPage />} /> */}
+          </Route>
+        </Routes>
+      </Suspense>
 
       <EditProfilePopup
         isOpen={isEditProfilePopupOpen}

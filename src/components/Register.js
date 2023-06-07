@@ -8,17 +8,17 @@ function Register({ handleRegister }) {
     useValidation();
   const { values, handleChange, setValues } = useForm(validateForm, {});
 
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    handleRegister(values);
-  }
-
   useEffect(() => {
     setValues({ email: '', password: '' });
     setIsValid(true);
     setErrors({});
   }, [setValues, setIsValid, setErrors]);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    handleRegister(values);
+  }
 
   return (
     <div className='login'>
