@@ -24,12 +24,10 @@
 ### Примененные знания
 
 - React
-  - использование Create React App
-  - хуки useState и useEffect
   - React Router
   - защищенные маршруты
   - авторизация через JWT
-  - работа с Local Starage
+  - работа с LocalStorage
 
 ### **Figma**
 
