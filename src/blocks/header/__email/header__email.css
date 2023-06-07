@@ -9,7 +9,6 @@
 
 @media screen and (max-width: 910px) {
   .header__email {
-    font-size: 14px;
-    line-height: 1.2;
+    padding: 0;
   }
 }

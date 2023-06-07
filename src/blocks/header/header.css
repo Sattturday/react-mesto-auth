@@ -1,13 +1,20 @@
 .header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
   max-width: 880px;
   margin: 45px auto 40px;
   border-bottom: 1px solid rgba(54, 54, 54, 0.7);
-  display: flex;
-  justify-content: space-between;
+  position: relative;
+  transition: 0.2s;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 910px) {
   .header {
     margin: 28px auto 42px;
   }
+}
+
+.header_menu-open {
+  margin-top: 170px;
 }

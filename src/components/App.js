@@ -12,10 +12,12 @@ import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoToolTip';
 import Loading from './Loading';
 import Layout from './Layout';
+// import PageNotFound from './PageNotFound';
 
 const Main = lazy(() => import('./Main'));
 const Login = lazy(() => import('./Login'));
 const Register = lazy(() => import('./Register'));
+const PageNotFound = lazy(() => import('./PageNotFound'));
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -267,8 +269,7 @@ function App() {
                 />
               }
             />
-            <Route path='load' element={<Loading />} />
-            {/* <Route path='*' element={<NotFoundPage />} /> */}
+            <Route path='*' element={<PageNotFound />} />
           </Route>
         </Routes>
       </Suspense>
