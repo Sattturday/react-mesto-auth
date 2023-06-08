@@ -1,13 +1,8 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useFormAndValidation } from '../hooks/useFormAndValidation';
-import { useForm } from '../hooks/useForm';
-import { useValidation } from '../hooks/useValidation';
 
 function Register({ handleRegister }) {
-  // const { isValid, setIsValid, errors, setErrors, validateForm } =
-  //   useValidation();
-  // const { values, handleChange, setValues } = useForm(validateForm, {});
   const { values, handleChange, errors, isValid, resetForm } =
     useFormAndValidation();
 

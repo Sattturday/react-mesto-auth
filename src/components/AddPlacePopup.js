@@ -4,7 +4,7 @@ import PopupWithForm from './PopupWithForm';
 import Input from './Input';
 
 function AddPlacePopup({ isOpen, onAddPlace }) {
-  const { values, handleChange, errors, isValid, setValues, resetForm } =
+  const { values, handleChange, errors, isValid, resetForm } =
     useFormAndValidation();
 
   useEffect(() => {
