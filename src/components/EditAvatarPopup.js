@@ -4,7 +4,6 @@ import PopupWithForm from './PopupWithForm';
 import { useValidation } from '../hooks/useValidation';
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
-  // const avatarRef = useRef();
   const { isValid, setIsValid, errors, setErrors, validateForm } =
     useValidation();
   const { values, handleChange, setValues } = useForm(validateForm, {});
@@ -20,18 +19,6 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
 
     onUpdateAvatar(values);
   }
-
-  // useEffect(() => {
-  //   avatarRef.current.value = '';
-  // }, [isOpen]);
-
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-
-  //   onUpdateAvatar({
-  //     avatar: avatarRef.current.value,
-  //   });
-  // }
 
   return (
     <PopupWithForm

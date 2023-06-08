@@ -1,4 +1,4 @@
-const baseUrl = 'https://auth.nomoreparties.co';
+const BASE_URL = 'https://auth.nomoreparties.co';
 
 const _checkAnswer = (res) => {
   if (res.ok) {
@@ -7,32 +7,36 @@ const _checkAnswer = (res) => {
   return Promise.reject(`Ошибка: ${res.status}`);
 };
 
+const _request = (url, options) => {
+  return fetch(`${BASE_URL}${url}`, options).then(_checkAnswer);
+};
+
 export const register = ({ email, password }) => {
-  return fetch(`${baseUrl}/signup`, {
+  return _request('/signup', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ email, password }),
-  }).then(_checkAnswer);
+  });
 };
 
 export const login = ({ email, password }) => {
-  return fetch(`${baseUrl}/signin`, {
+  return _request('/signin', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ email, password }),
-  }).then(_checkAnswer);
+  });
 };
 
 export const checkToken = (token) => {
-  return fetch(`${baseUrl}/users/me`, {
+  return _request('/users/me', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-  }).then(_checkAnswer);
+  });
 };

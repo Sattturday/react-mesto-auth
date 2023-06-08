@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../images/header-logo.svg';
 
-function Header({ userEmail, onLogout }) {
-  const [showEmail, setShowEmail] = useState(false);
+function Header({ loggedIn, userEmail, onLogout }) {
   const [link, setLink] = useState('');
   const [linkText, setLinkText] = useState('');
   const [menuOpen, setMenuOpen] = useState('');
@@ -12,25 +11,21 @@ function Header({ userEmail, onLogout }) {
   useEffect(() => {
     switch (location.pathname) {
       case '/react-mesto-auth':
-        setShowEmail(true);
         setLink('/sign-in');
         setLinkText('Выйти');
         break;
       case '/sign-in':
         setMenuOpen(false);
-        setShowEmail(false);
         setLink('/sign-up');
         setLinkText('Регистрация');
         break;
       case '/sign-up':
         setMenuOpen(false);
-        setShowEmail(false);
         setLink('/sign-in');
         setLinkText('Войти');
         break;
       default:
         setMenuOpen(false);
-        setShowEmail(false);
         setLink('');
         setLinkText('');
     }
@@ -44,7 +39,7 @@ function Header({ userEmail, onLogout }) {
     <header className={`header ${(menuOpen && ' header_menu-open') || ''}`}>
       <img className='header__logo' src={logo} alt='Логотип проекта Mesto' />
 
-      {showEmail ? (
+      {loggedIn ? (
         <>
           <div className='header__info'>
             <p className='header__email'>{userEmail}</p>

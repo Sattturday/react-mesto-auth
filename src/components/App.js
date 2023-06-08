@@ -210,7 +210,13 @@ function App() {
           <Routes>
             <Route
               path='/'
-              element={<Layout userEmail={userEmail} onLogout={handleLogout} />}
+              element={
+                <Layout
+                  loggedIn={loggedIn}
+                  userEmail={userEmail}
+                  onLogout={handleLogout}
+                />
+              }
             >
               <Route
                 index
