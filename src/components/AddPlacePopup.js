@@ -1,18 +1,15 @@
 import { useEffect } from 'react';
-import { useForm } from '../hooks/useForm';
-import { useValidation } from '../hooks/useValidation';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 import PopupWithForm from './PopupWithForm';
+import Input from './Input';
 
 function AddPlacePopup({ isOpen, onAddPlace }) {
-  const { isValid, setIsValid, errors, setErrors, validateForm } =
-    useValidation();
-  const { values, handleChange, setValues } = useForm(validateForm, {});
+  const { values, handleChange, errors, isValid, setValues, resetForm } =
+    useFormAndValidation();
 
   useEffect(() => {
-    setValues({ name: '', link: '' });
-    setIsValid(false);
-    setErrors({});
-  }, [setValues, setIsValid, setErrors, isOpen]);
+    resetForm();
+  }, [resetForm, isOpen]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -30,32 +27,24 @@ function AddPlacePopup({ isOpen, onAddPlace }) {
       isOpen={isOpen}
       isValid={isValid}
     >
-      <input
-        className={`popup__input ${
-          (errors.name && 'popup__input_type_error') || ''
-        }`}
+      <Input
         name='name'
         type='text'
         minLength='2'
         maxLength='30'
         placeholder='Название'
-        value={values.name || ''}
-        onChange={handleChange}
-        required
+        errors={errors}
+        values={values}
+        handleChange={handleChange}
       />
-      <span className='popup__error'>{errors.name}</span>
-      <input
-        className={`popup__input ${
-          (errors.link && 'popup__input_type_error') || ''
-        }`}
+      <Input
         name='link'
-        required
         type='url'
         placeholder='Ссылка на картинку'
-        value={values.link || ''}
-        onChange={handleChange}
+        errors={errors}
+        values={values}
+        handleChange={handleChange}
       />
-      <span className='popup__error'>{errors.link}</span>
     </PopupWithForm>
   );
 }

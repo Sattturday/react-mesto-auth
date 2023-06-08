@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { AppContext } from '../contexts/AppContext';
 import Popup from './Popup';
+import Form from './Form';
 
 function PopupWithForm({
   name,
@@ -17,18 +18,16 @@ function PopupWithForm({
   return (
     <Popup isOpen={isOpen} name={name} onClose={app.closeAllPopups}>
       <p className='popup__title'>{title}</p>
-      <form className='popup__items' name={name} onSubmit={onSubmit} noValidate>
+      <Form
+        name={name}
+        buttonText={buttonText}
+        loadingText={loadingText}
+        onSubmit={onSubmit}
+        isLoading={app.isLoading}
+        isValid={isValid}
+      >
         {children}
-        <button
-          className={`popup__button ${
-            (!isValid && ' popup__button_disabled') || ''
-          }`}
-          type='submit'
-          disabled={!isValid}
-        >
-          {app.isLoading ? loadingText : buttonText}
-        </button>
-      </form>
+      </Form>
     </Popup>
   );
 }

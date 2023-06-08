@@ -1,18 +1,15 @@
 import { useEffect } from 'react';
-import { useForm } from '../hooks/useForm';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 import PopupWithForm from './PopupWithForm';
-import { useValidation } from '../hooks/useValidation';
+import Input from './Input';
 
 function EditAvatarPopup({ isOpen, onUpdateAvatar }) {
-  const { isValid, setIsValid, errors, setErrors, validateForm } =
-    useValidation();
-  const { values, handleChange, setValues } = useForm(validateForm, {});
+  const { values, handleChange, errors, isValid, resetForm } =
+    useFormAndValidation();
 
   useEffect(() => {
-    setValues({ avatar: '' });
-    setIsValid(false);
-    setErrors({});
-  }, [setValues, setIsValid, setErrors, isOpen]);
+    resetForm();
+  }, [resetForm, isOpen]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -30,19 +27,14 @@ function EditAvatarPopup({ isOpen, onUpdateAvatar }) {
       isOpen={isOpen}
       isValid={isValid}
     >
-      <input
-        className={`popup__input ${
-          (errors.avatar && 'popup__input_type_error') || ''
-        }`}
+      <Input
         name='avatar'
         type='url'
         placeholder='https://somewebsite.com/someimage.jpg'
-        value={values.avatar || ''}
-        //       ref={avatarRef}
-        onChange={handleChange}
-        required
+        errors={errors}
+        values={values}
+        handleChange={handleChange}
       />
-      <span className='popup__error'>{errors.avatar}</span>
     </PopupWithForm>
   );
 }
