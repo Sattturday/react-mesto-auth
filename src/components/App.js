@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { AppContext } from '../contexts/AppContext';
@@ -11,13 +11,11 @@ import AddPlacePopup from './AddPlacePopup';
 import ConfirmationPopup from './ConfirmationPopup';
 import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoToolTip';
-import Loading from './Loading';
 import Layout from './Layout';
-
-const Main = lazy(() => import('./Main'));
-const Login = lazy(() => import('./Login'));
-const Register = lazy(() => import('./Register'));
-const PageNotFound = lazy(() => import('./PageNotFound'));
+import Main from './Main';
+import Login from './Login';
+import Register from './Register';
+import PageNotFound from './PageNotFound';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -219,61 +217,59 @@ function App() {
   return (
     <AppContext.Provider value={{ isLoading, closeAllPopups }}>
       <CurrentUserContext.Provider value={currentUser}>
-        <Suspense fallback={<Loading />}>
-          <Routes>
+        <Routes>
+          <Route
+            path='/'
+            element={
+              <Layout
+                loggedIn={loggedIn}
+                userEmail={userEmail}
+                onLogout={handleLogout}
+              />
+            }
+          >
             <Route
-              path='/'
+              index
               element={
-                <Layout
+                loggedIn ? (
+                  <Navigate to='/react-mesto-auth' />
+                ) : (
+                  <Navigate to='/sign-in' replace />
+                )
+              }
+            />
+            <Route
+              path='react-mesto-auth'
+              element={
+                <ProtectedRoute
+                  element={Main}
                   loggedIn={loggedIn}
-                  userEmail={userEmail}
-                  onLogout={handleLogout}
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
                 />
               }
-            >
-              <Route
-                index
-                element={
-                  loggedIn ? (
-                    <Navigate to='/react-mesto-auth' />
-                  ) : (
-                    <Navigate to='/sign-in' replace />
-                  )
-                }
-              />
-              <Route
-                path='react-mesto-auth'
-                element={
-                  <ProtectedRoute
-                    element={Main}
-                    loggedIn={loggedIn}
-                    cards={cards}
-                    onEditProfile={handleEditProfileClick}
-                    onAddPlace={handleAddPlaceClick}
-                    onEditAvatar={handleEditAvatarClick}
-                    onCardClick={handleCardClick}
-                    onCardLike={handleCardLike}
-                    onCardDelete={handleCardDelete}
-                  />
-                }
-              />
-              <Route
-                path='sign-up'
-                element={<Register handleRegister={handleRegister} />}
-              />
-              <Route
-                path='sign-in'
-                element={
-                  <Login
-                    handleLogin={handleLogin}
-                    handleInfoMessage={handleInfoMessage}
-                  />
-                }
-              />
-              <Route path='*' element={<PageNotFound />} />
-            </Route>
-          </Routes>
-        </Suspense>
+            />
+            <Route
+              path='sign-up'
+              element={<Register handleRegister={handleRegister} />}
+            />
+            <Route
+              path='sign-in'
+              element={
+                <Login
+                  handleLogin={handleLogin}
+                  handleInfoMessage={handleInfoMessage}
+                />
+              }
+            />
+            <Route path='*' element={<PageNotFound />} />
+          </Route>
+        </Routes>
 
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

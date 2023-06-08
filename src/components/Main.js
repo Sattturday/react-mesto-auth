@@ -4,10 +4,10 @@ import Card from './Card';
 import Footer from './Footer';
 
 function Main({
+  cards,
+  onEditAvatar,
   onEditProfile,
   onAddPlace,
-  onEditAvatar,
-  cards,
   onCardClick,
   onCardLike,
   onCardDelete,
