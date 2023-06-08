@@ -3,7 +3,7 @@ import { useForm } from '../hooks/useForm';
 import PopupWithForm from './PopupWithForm';
 import { useValidation } from '../hooks/useValidation';
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
+function EditAvatarPopup({ isOpen, onUpdateAvatar }) {
   const { isValid, setIsValid, errors, setErrors, validateForm } =
     useValidation();
   const { values, handleChange, setValues } = useForm(validateForm, {});
@@ -26,10 +26,8 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
       title='Обновить аватар'
       buttonText='Сохранить'
       loadingText='Сохранение...'
-      onClose={onClose}
       onSubmit={handleSubmit}
       isOpen={isOpen}
-      isLoading={isLoading}
       isValid={isValid}
     >
       <input

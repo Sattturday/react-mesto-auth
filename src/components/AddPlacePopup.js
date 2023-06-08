@@ -3,7 +3,7 @@ import { useForm } from '../hooks/useForm';
 import { useValidation } from '../hooks/useValidation';
 import PopupWithForm from './PopupWithForm';
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace, isLoading }) {
+function AddPlacePopup({ isOpen, onAddPlace }) {
   const { isValid, setIsValid, errors, setErrors, validateForm } =
     useValidation();
   const { values, handleChange, setValues } = useForm(validateForm, {});
@@ -26,10 +26,8 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, isLoading }) {
       title='Новое место'
       buttonText='Создать'
       loadingText='Создание...'
-      onClose={onClose}
       onSubmit={handleSubmit}
       isOpen={isOpen}
-      isLoading={isLoading}
       isValid={isValid}
     >
       <input

@@ -271,14 +271,14 @@ function App() {
           </Route>
         </Routes>
 
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onUpdateUser={handleUpdateUser}
-        />
-
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onUpdateAvatar={handleUpdateAvatar}
+        />
+
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onUpdateUser={handleUpdateUser}
         />
 
         <AddPlacePopup
