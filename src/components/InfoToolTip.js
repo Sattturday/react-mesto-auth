@@ -1,9 +1,12 @@
+import { useContext } from 'react';
+import { AppContext } from '../contexts/AppContext';
 import { usePopupClose } from '../hooks/usePopupClose';
 import imgError from '../images/popup__error.svg';
 import imgSuccess from '../images/popup__success.svg';
 
-function InfoTooltip({ message, onClose }) {
-  usePopupClose(message, onClose);
+function InfoTooltip({ message }) {
+  const app = useContext(AppContext);
+  usePopupClose(message, app.closeAllPopups);
 
   const linkImage = message?.isSuccess ? imgSuccess : imgError;
 
@@ -12,7 +15,11 @@ function InfoTooltip({ message, onClose }) {
       className={`popup popup_for_info ${(message && ' popup_opened') || ''}`}
     >
       <div className='popup__container'>
-        <button className='popup__close' type='button' onClick={onClose} />
+        <button
+          className='popup__close'
+          type='button'
+          onClick={app.closeAllPopups}
+        />
         <img
           className='popup__image-login'
           src={linkImage}

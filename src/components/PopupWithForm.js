@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { AppContext } from '../contexts/AppContext';
 import { usePopupClose } from '../hooks/usePopupClose';
 
 function PopupWithForm({
@@ -5,14 +7,13 @@ function PopupWithForm({
   title,
   buttonText,
   loadingText,
-  onClose,
   onSubmit,
   isOpen,
-  isLoading,
   isValid,
   children,
 }) {
-  usePopupClose(isOpen, onClose);
+  const app = useContext(AppContext);
+  usePopupClose(isOpen, app.closeAllPopups);
 
   return (
     <div className={`popup popup_for_${name} ${isOpen && ' popup_opened'}`}>
@@ -22,7 +23,11 @@ function PopupWithForm({
         onSubmit={onSubmit}
         noValidate
       >
-        <button className='popup__close' type='button' onClick={onClose} />
+        <button
+          className='popup__close'
+          type='button'
+          onClick={app.closeAllPopups}
+        />
         <p className='popup__title'>{title}</p>
         <fieldset className='popup__items'>
           {children}
@@ -33,7 +38,7 @@ function PopupWithForm({
             type='submit'
             disabled={!isValid}
           >
-            {isLoading ? loadingText : buttonText}
+            {app.isLoading ? loadingText : buttonText}
           </button>
         </fieldset>
       </form>

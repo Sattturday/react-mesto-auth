@@ -1,6 +1,7 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { AppContext } from '../contexts/AppContext';
 import { login, register, checkToken } from '../utils/auth';
 import api from '../utils/api';
 import ImagePopup from './ImagePopup';
@@ -36,14 +37,6 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
 
-  const isOpen =
-    isEditAvatarPopupOpen ||
-    isEditProfilePopupOpen ||
-    isAddPlacePopupOpen ||
-    selectedCard ||
-    deletedCard ||
-    infoMessage;
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,18 +54,6 @@ function App() {
   useEffect(() => {
     tokenCheck();
   }, [navigate]);
-
-  useEffect(() => {
-    const closeByEscape = (evt) => {
-      if (evt.key === 'Escape') {
-        closeAllPopups();
-      }
-    };
-    if (isOpen) {
-      document.addEventListener('keydown', closeByEscape);
-      return () => document.removeEventListener('keydown', closeByEscape);
-    }
-  }, [isOpen]);
 
   // открытие/закрытие попапов
   function handleEditAvatarClick() {
@@ -223,89 +204,83 @@ function App() {
   }
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <Suspense fallback={<Loading />}>
-        <Routes>
-          <Route
-            path='/'
-            element={<Layout userEmail={userEmail} onLogout={handleLogout} />}
-          >
+    <AppContext.Provider value={{ isLoading, closeAllPopups }}>
+      <CurrentUserContext.Provider value={currentUser}>
+        <Suspense fallback={<Loading />}>
+          <Routes>
             <Route
-              index
-              element={
-                loggedIn ? (
-                  <Navigate to='/react-mesto-auth' />
-                ) : (
-                  <Navigate to='/sign-in' replace />
-                )
-              }
-            />
-            <Route
-              path='react-mesto-auth'
-              element={
-                <ProtectedRoute
-                  element={Main}
-                  loggedIn={loggedIn}
-                  cards={cards}
-                  onEditProfile={handleEditProfileClick}
-                  onAddPlace={handleAddPlaceClick}
-                  onEditAvatar={handleEditAvatarClick}
-                  onCardClick={handleCardClick}
-                  onCardLike={handleCardLike}
-                  onCardDelete={handleCardDelete}
-                />
-              }
-            />
-            <Route
-              path='sign-up'
-              element={<Register handleRegister={handleRegister} />}
-            />
-            <Route
-              path='sign-in'
-              element={
-                <Login
-                  handleLogin={handleLogin}
-                  handleInfoMessage={handleInfoMessage}
-                />
-              }
-            />
-            <Route path='*' element={<PageNotFound />} />
-          </Route>
-        </Routes>
-      </Suspense>
+              path='/'
+              element={<Layout userEmail={userEmail} onLogout={handleLogout} />}
+            >
+              <Route
+                index
+                element={
+                  loggedIn ? (
+                    <Navigate to='/react-mesto-auth' />
+                  ) : (
+                    <Navigate to='/sign-in' replace />
+                  )
+                }
+              />
+              <Route
+                path='react-mesto-auth'
+                element={
+                  <ProtectedRoute
+                    element={Main}
+                    loggedIn={loggedIn}
+                    cards={cards}
+                    onEditProfile={handleEditProfileClick}
+                    onAddPlace={handleAddPlaceClick}
+                    onEditAvatar={handleEditAvatarClick}
+                    onCardClick={handleCardClick}
+                    onCardLike={handleCardLike}
+                    onCardDelete={handleCardDelete}
+                  />
+                }
+              />
+              <Route
+                path='sign-up'
+                element={<Register handleRegister={handleRegister} />}
+              />
+              <Route
+                path='sign-in'
+                element={
+                  <Login
+                    handleLogin={handleLogin}
+                    handleInfoMessage={handleInfoMessage}
+                  />
+                }
+              />
+              <Route path='*' element={<PageNotFound />} />
+            </Route>
+          </Routes>
+        </Suspense>
 
-      <EditProfilePopup
-        isOpen={isEditProfilePopupOpen}
-        onClose={closeAllPopups}
-        onUpdateUser={handleUpdateUser}
-        isLoading={isLoading}
-      />
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onUpdateUser={handleUpdateUser}
+        />
 
-      <EditAvatarPopup
-        isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
-        onUpdateAvatar={handleUpdateAvatar}
-        isLoading={isLoading}
-      />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
 
-      <AddPlacePopup
-        isOpen={isAddPlacePopupOpen}
-        onClose={closeAllPopups}
-        onAddPlace={handleAddPlaceSubmit}
-        isLoading={isLoading}
-      />
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onAddPlace={handleAddPlaceSubmit}
+        />
 
-      <ConfirmationPopup
-        isOpen={deletedCard}
-        onClose={closeAllPopups}
-        onConfirm={handleConfirmDelete}
-        isLoading={isLoading}
-      />
+        <ConfirmationPopup
+          isOpen={deletedCard}
+          onConfirm={handleConfirmDelete}
+        />
 
-      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <ImagePopup card={selectedCard} />
 
-      <InfoTooltip message={infoMessage} onClose={closeAllPopups} />
-    </CurrentUserContext.Provider>
+        <InfoTooltip message={infoMessage} />
+      </CurrentUserContext.Provider>
+    </AppContext.Provider>
   );
 }
 

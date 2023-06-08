@@ -1,16 +1,23 @@
+import { useContext } from 'react';
+import { AppContext } from '../contexts/AppContext';
 import { usePopupClose } from '../hooks/usePopupClose';
 
-function ImagePopup({ card, onClose }) {
+function ImagePopup({ card }) {
   const checkCard = card !== null;
 
-  usePopupClose(card, onClose);
+  const app = useContext(AppContext);
+  usePopupClose(card, app.closeAllPopups);
 
   return (
     <div
       className={'popup popup_for_full-image' + (checkCard && ' popup_opened')}
     >
       <figure className='popup__container-image'>
-        <button className='popup__close' type='button' onClick={onClose} />
+        <button
+          className='popup__close'
+          type='button'
+          onClick={app.closeAllPopups}
+        />
         <img
           className='popup__full-image'
           src={checkCard ? card.link : '#'}
