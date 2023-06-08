@@ -13,7 +13,6 @@ import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoToolTip';
 import Loading from './Loading';
 import Layout from './Layout';
-// import PageNotFound from './PageNotFound';
 
 const Main = lazy(() => import('./Main'));
 const Login = lazy(() => import('./Login'));
@@ -55,7 +54,7 @@ function App() {
     tokenCheck();
   }, [navigate]);
 
-  // открытие/закрытие попапов
+  // открытие и закрытие попапов
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -89,25 +88,27 @@ function App() {
     setInfoMessage(message);
   }
 
+  // обновление аватара и инфо юзера
   function handleUpdateAvatar(data) {
     function makeRequest() {
       return api.updateAvatar(data).then(setCurrentUser);
     }
-    handleSubmit(makeRequest);
+    handleSubmit(makeRequest, false);
   }
 
   function handleUpdateUser(data) {
     function makeRequest() {
       return api.setUserInfo(data).then(setCurrentUser);
     }
-    handleSubmit(makeRequest);
+    handleSubmit(makeRequest, false);
   }
 
+  // добавление и удаление карточек, лайки
   function handleAddPlaceSubmit(data) {
     function makeRequest() {
       return api.addCard(data).then((newCard) => setCards([newCard, ...cards]));
     }
-    handleSubmit(makeRequest);
+    handleSubmit(makeRequest, false);
   }
 
   function handleCardLike(card) {
@@ -120,7 +121,7 @@ function App() {
         );
       });
     }
-    handleSubmit(makeRequest);
+    handleSubmit(makeRequest, false);
   }
 
   function handleConfirmDelete() {
@@ -131,39 +132,22 @@ function App() {
         setCards((state) => state.filter((c) => c._id !== cardId));
       });
     }
-    handleSubmit(makeRequest);
-  }
-
-  function handleSubmit(request) {
-    setIsLoading(true);
-    request()
-      .then(closeAllPopups)
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
+    handleSubmit(makeRequest, false);
   }
 
   // авторизация
   function handleRegister(values) {
-    register(values)
-      .then(() => {
+    function makeRequest() {
+      return register(values).then(() => {
         navigate('/sign-in');
-        setInfoMessage({
-          text: 'Вы успешно зарегистрировались!',
-          isSuccess: true,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        setInfoMessage({
-          text: 'Что-то пошло не так! Попробуйте ещё раз.',
-          isSuccess: false,
-        });
       });
+    }
+    handleSubmit(makeRequest, true);
   }
 
   function handleLogin(values) {
-    login(values)
-      .then((data) => {
+    function makeRequest() {
+      return login(values).then((data) => {
         if (data.token) {
           localStorage.setItem('token', data.token);
           setUserEmail(values.email);
@@ -173,30 +157,59 @@ function App() {
         } else {
           return;
         }
-      })
-      .catch((err) => {
-        console.log(err);
-        setInfoMessage({
-          text: 'Что-то пошло не так! Попробуйте ещё раз.',
-          isSuccess: false,
-        });
       });
+    }
+    handleSubmit(makeRequest, false);
   }
 
   function tokenCheck() {
     const token = localStorage.getItem('token');
-
+    function makeRequest() {
+      return checkToken(token).then((data) => {
+        setUserEmail(data.data.email);
+        setLoggedIn(true);
+        navigate('/react-mesto-auth');
+      });
+    }
     if (token) {
-      checkToken(token)
-        .then((data) => {
-          setUserEmail(data.data.email);
-          setLoggedIn(true);
-          navigate('/react-mesto-auth');
-        })
-        .catch(console.error);
+      handleSubmit(makeRequest, false);
     }
   }
 
+  // отправка запросов
+  function handleSubmit(request, showInfo) {
+    setIsLoading(true);
+    request()
+      .then(() => {
+        closeAllPopups();
+        if (showInfo) {
+          handleSuccess();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        handleError();
+      })
+      .finally(() => setIsLoading(false));
+  }
+
+  // обработка ошибок запросов
+  function handleError() {
+    return setInfoMessage({
+      text: 'Что-то пошло не так! Попробуйте ещё раз.',
+      isSuccess: false,
+    });
+  }
+
+  // обработка успешной регистрации
+  function handleSuccess() {
+    return setInfoMessage({
+      text: 'Вы успешно зарегистрировались!',
+      isSuccess: true,
+    });
+  }
+
+  // выход из приложения
   function handleLogout() {
     localStorage.removeItem('token');
     setLoggedIn(false);
