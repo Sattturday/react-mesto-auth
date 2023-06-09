@@ -8,11 +8,11 @@ const Form = ({
   children,
 }) => {
   return (
-    <form className='popup__items' name={name} onSubmit={onSubmit} noValidate>
+    <form className='form' name={name} onSubmit={onSubmit} noValidate>
       {children}
       <button
-        className={`popup__button ${
-          (!isValid && ' popup__button_disabled') || ''
+        className={`form__submit ${
+          (!isValid && ' form__submit_disabled') || ''
         }`}
         type='submit'
         disabled={!isValid}

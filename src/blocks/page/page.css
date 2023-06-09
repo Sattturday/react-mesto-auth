@@ -11,3 +11,14 @@
   -moz-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
 }
+
+.page_hidden {
+  overflow: hidden;
+  padding-right: 17px;
+}
+
+@media screen and (max-width: 910px) {
+  .page_hidden {
+    padding-right: 0;
+  }
+}

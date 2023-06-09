@@ -11,7 +11,12 @@ const Popup = ({ isOpen, name, onClose, children }) => {
     };
 
     document.addEventListener('keydown', closeByEscape);
-    return () => document.removeEventListener('keydown', closeByEscape);
+    document.body.classList.add('page_hidden');
+
+    return () => {
+      document.removeEventListener('keydown', closeByEscape);
+      document.body.classList.remove('page_hidden');
+    };
   }, [isOpen, onClose]);
 
   const handleOverlay = (e) => {

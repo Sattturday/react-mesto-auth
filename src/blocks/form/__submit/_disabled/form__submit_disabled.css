@@ -1,4 +1,4 @@
-.popup__button_disabled {
+.form__submit_disabled {
   color: #000;
   pointer-events: none;
   -webkit-user-select: none;
