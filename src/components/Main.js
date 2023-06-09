@@ -19,7 +19,7 @@ function Main({
 
   return (
     <>
-      {app.isLoadingContent ? (
+      {app.isLoadingContent && app.loggedIn ? (
         <Loading />
       ) : (
         <main className='content'>
