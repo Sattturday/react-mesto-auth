@@ -43,7 +43,8 @@ function App() {
       api
         .getUserInfo()
         .then(setCurrentUser)
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
+        .finally(() => setIsLoadingContent(false));
 
       api
         .getInitialCards()
