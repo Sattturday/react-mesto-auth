@@ -4,13 +4,13 @@ import { AppContext } from '../contexts/AppContext';
 import Header from './Header';
 import Loading from './Loading';
 
-function Layout({ loggedIn, userEmail, onLogout }) {
+function Layout({ onLogout }) {
   const app = useContext(AppContext);
 
   return (
     <>
-      <Header loggedIn={loggedIn} userEmail={userEmail} onLogout={onLogout} />
-      {app.isLoading ? <Loading /> : <Outlet />}
+      <Header onLogout={onLogout} />
+      {app.isLoading && !app.loggedIn ? <Loading /> : <Outlet />}
     </>
   );
 }

@@ -1,12 +1,13 @@
-import { useEffect } from 'react';
-
-import { useForm } from '../hooks/useForm';
-import { useValidation } from '../hooks/useValidation';
+import { useEffect, useContext } from 'react';
+import { AppContext } from '../contexts/AppContext';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
+import Form from './Form';
+import Input from './Input';
 
 function Login({ handleLogin }) {
-  const { isValid, setIsValid, errors, setErrors, validateForm } =
-    useValidation();
-  const { values, handleChange, setValues } = useForm(validateForm, {});
+  const { values, handleChange, errors, isValid, resetForm } =
+    useFormAndValidation();
+  const app = useContext(AppContext);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -15,53 +16,40 @@ function Login({ handleLogin }) {
   }
 
   useEffect(() => {
-    setValues({ email: '', password: '' });
-    setIsValid(true);
-    setErrors({});
-  }, [setValues, setIsValid, setErrors]);
+    resetForm(true);
+  }, [resetForm]);
 
   return (
     <div className='login'>
-      <form
-        className='login__form'
-        name='login'
-        onSubmit={handleSubmit}
-        noValidate
-      >
+      <div className='login__container'>
         <p className='login__title'>Вход</p>
-        <fieldset className='login__items'>
-          <input
-            className='login__input'
+        <Form
+          name='login'
+          buttonText='Войти'
+          loadingText='Вход...'
+          onSubmit={handleSubmit}
+          isLoading={app.isLoading}
+          isValid={isValid}
+        >
+          <Input
             name='email'
             type='email'
             placeholder='Email'
-            value={values.email || ''}
-            onChange={handleChange}
-            required
+            errors={errors}
+            values={values}
+            handleChange={handleChange}
           />
-          <span className='login__error'>{errors.email}</span>
-          <input
-            className='login__input'
+          <Input
             name='password'
             type='password'
             minLength='6'
             placeholder='Пароль'
-            value={values.password || ''}
-            onChange={handleChange}
-            required
+            errors={errors}
+            values={values}
+            handleChange={handleChange}
           />
-          <span className='login__error'>{errors.password}</span>
-          <button
-            className={`login__button ${
-              (!isValid && ' login__button_disabled') || ''
-            }`}
-            type='submit'
-            disabled={!isValid}
-          >
-            Войти
-          </button>
-        </fieldset>
-      </form>
+        </Form>
+      </div>
     </div>
   );
 }

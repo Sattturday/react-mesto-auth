@@ -11,7 +11,7 @@ function InfoTooltip({ message }) {
 
   return (
     <Popup isOpen={message} name='info' onClose={app.closeAllPopups}>
-      <img className='popup__image-login' src={linkImage} alt={message?.text} />
+      <img className='popup__icon-info' src={linkImage} alt={message?.text} />
       <p className='popup__title popup__title_info'>{message?.text}</p>
     </Popup>
   );

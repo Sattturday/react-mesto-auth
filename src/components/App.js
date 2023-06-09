@@ -19,6 +19,7 @@ import PageNotFound from './PageNotFound';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingContent, setIsLoadingContent] = useState(false);
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -37,16 +38,20 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api
-      .getUserInfo()
-      .then(setCurrentUser)
-      .catch((err) => console.error(err));
+    if (loggedIn) {
+      api
+        .getUserInfo()
+        .then(setCurrentUser)
+        .catch((err) => console.error(err));
 
-    api
-      .getInitialCards()
-      .then((res) => setCards(res))
-      .catch((err) => console.error(err));
-  }, []);
+      setIsLoadingContent(true);
+      api
+        .getInitialCards()
+        .then((res) => setCards(res))
+        .catch((err) => console.error(err))
+        .finally(() => setIsLoadingContent(false));
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     tokenCheck();
@@ -215,19 +220,18 @@ function App() {
   }
 
   return (
-    <AppContext.Provider value={{ isLoading, closeAllPopups }}>
+    <AppContext.Provider
+      value={{
+        loggedIn,
+        userEmail,
+        isLoading,
+        isLoadingContent,
+        closeAllPopups,
+      }}
+    >
       <CurrentUserContext.Provider value={currentUser}>
         <Routes>
-          <Route
-            path='/'
-            element={
-              <Layout
-                loggedIn={loggedIn}
-                userEmail={userEmail}
-                onLogout={handleLogout}
-              />
-            }
-          >
+          <Route path='/' element={<Layout onLogout={handleLogout} />}>
             <Route
               index
               element={

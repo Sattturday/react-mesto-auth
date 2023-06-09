@@ -14,8 +14,8 @@ const Popup = ({ isOpen, name, onClose, children }) => {
     document.body.classList.add('page_hidden');
 
     return () => {
-      document.removeEventListener('keydown', closeByEscape);
       document.body.classList.remove('page_hidden');
+      document.removeEventListener('keydown', closeByEscape);
     };
   }, [isOpen, onClose]);
 
@@ -27,7 +27,7 @@ const Popup = ({ isOpen, name, onClose, children }) => {
 
   return (
     <div
-      className={`popup ${isOpen && ' popup_opened'} popup_type_${name}`}
+      className={`popup${(isOpen && ' popup_opened') || ''} popup_type_${name}`}
       onClick={handleOverlay}
     >
       <div className={`popup__container popup__container_type_${name}`}>

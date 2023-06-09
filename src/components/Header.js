@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { AppContext } from '../contexts/AppContext';
 import logo from '../images/header-logo.svg';
 
-function Header({ loggedIn, userEmail, onLogout }) {
+function Header({ onLogout }) {
+  const location = useLocation();
+  const app = useContext(AppContext);
+
   const [link, setLink] = useState('');
   const [linkText, setLinkText] = useState('');
   const [menuOpen, setMenuOpen] = useState('');
-  const location = useLocation();
 
   useEffect(() => {
     switch (location.pathname) {
@@ -39,10 +42,10 @@ function Header({ loggedIn, userEmail, onLogout }) {
     <header className={`header ${(menuOpen && ' header_menu-open') || ''}`}>
       <img className='header__logo' src={logo} alt='Логотип проекта Mesto' />
 
-      {loggedIn ? (
+      {app.loggedIn ? (
         <>
           <div className='header__info'>
-            <p className='header__email'>{userEmail}</p>
+            <p className='header__email'>{app.userEmail}</p>
             <Link
               className='header__link header__link_logout'
               to={link}

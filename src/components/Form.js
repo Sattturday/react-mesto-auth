@@ -8,7 +8,12 @@ const Form = ({
   children,
 }) => {
   return (
-    <form className='form' name={name} onSubmit={onSubmit} noValidate>
+    <form
+      className={`form form_type_${name}`}
+      name={name}
+      onSubmit={onSubmit}
+      noValidate
+    >
       {children}
       <button
         className={`form__submit ${

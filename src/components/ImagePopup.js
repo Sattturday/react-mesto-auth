@@ -9,7 +9,7 @@ function ImagePopup({ card }) {
   return (
     <Popup isOpen={card} name='image' onClose={app.closeAllPopups}>
       <img
-        className='popup__full-image'
+        className='popup__image'
         src={checkCard ? card.link : '#'}
         alt={checkCard ? card.name : ''}
       />
