@@ -13,3 +13,9 @@
   opacity: 0;
   visibility: hidden;
 }
+
+@media screen and (max-width: 768px) {
+  .popup {
+    padding: 0;
+  }
+}

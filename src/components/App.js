@@ -39,12 +39,12 @@ function App() {
 
   useEffect(() => {
     if (loggedIn) {
+      setIsLoadingContent(true);
       api
         .getUserInfo()
         .then(setCurrentUser)
         .catch((err) => console.error(err));
 
-      setIsLoadingContent(true);
       api
         .getInitialCards()
         .then((res) => setCards(res))
