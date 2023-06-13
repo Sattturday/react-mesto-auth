@@ -7,10 +7,6 @@
   text-align: center;
 }
 
-.login__title span {
-  font-size: 36px;
-}
-
 @media screen and (max-width: 768px) {
   .login__title {
     padding: 0 0 22px;

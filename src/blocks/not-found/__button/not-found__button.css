@@ -1,0 +1,25 @@
+.not-found__button {
+  margin-top: 40%;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 50px;
+  border: 2px solid #fff;
+  border-radius: 2px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.not-found__button:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 768px) {
+  .not-found__button {
+    margin-top: 75%;
+  }
+}
