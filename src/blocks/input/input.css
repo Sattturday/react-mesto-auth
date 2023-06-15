@@ -30,3 +30,7 @@
   font-family: 'Inter', 'Arial', sans-serif;
   font-style: normal;
 }
+
+.input:-webkit-autofill {
+  transition: all 5000s ease-in-out;
+}
