@@ -24,7 +24,11 @@
   opacity: 0.5;
 }
 
-.form_type_register input {
+.form_type_register .input {
   color: #fff;
   border-bottom: 1px solid #ccc;
+}
+
+.form_type_register .input_type_error {
+  border-bottom-color: #ff0000;
 }
