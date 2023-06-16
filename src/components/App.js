@@ -56,7 +56,7 @@ function App() {
 
   useEffect(() => {
     tokenCheck();
-  }, [navigate]);
+  }, []);
 
   // открытие и закрытие попапов
   function handleEditAvatarClick() {
