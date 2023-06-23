@@ -19,7 +19,7 @@
 
 ### **GitHub Pages**
 
-- Открыть в браузере сайт [Mesto](https://sattturday.github.io/mesto-react-auth)
+- Открыть в браузере сайт [Mesto](https://sattturday.github.io/react-mesto-auth)
 
 ### Примененные знания
 
